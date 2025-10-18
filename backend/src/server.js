@@ -33,12 +33,14 @@ const io = new Server(httpServer, {
       const allowedOrigins = [
         'http://localhost:5173',
         'http://localhost:3000',
+        'http://localhost:5175',
+        process.env.FRONTEND_URL, // Add the FRONTEND_URL from environment variables
         'https://gatherly-virid.vercel.app',
         'https://gatherly-trjg.onrender.com'
-      ];
+      ].filter(Boolean); // Remove any undefined values
       
       // Check if the origin is in our allowed list or if it's from our Vercel deployment
-      if (allowedOrigins.indexOf(origin) !== -1 || origin?.includes('gatherly-virid.vercel.app') || origin?.includes('gatherly-trjg.onrender.com')) {
+      if (allowedOrigins.includes(origin) || origin?.includes('gatherly-virid.vercel.app') || origin?.includes('gatherly-trjg.onrender.com')) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -65,12 +67,14 @@ app.use(
       const allowedOrigins = [
         'http://localhost:5173',
         'http://localhost:3000',
+        'http://localhost:5175',
+        process.env.FRONTEND_URL, // Add the FRONTEND_URL from environment variables
         'https://gatherly-virid.vercel.app',
         'https://gatherly-trjg.onrender.com'
-      ];
+      ].filter(Boolean); // Remove any undefined values
       
       // Check if the origin is in our allowed list or if it's from our Vercel deployment
-      if (allowedOrigins.indexOf(origin) !== -1 || origin?.includes('gatherly-virid.vercel.app') || origin?.includes('gatherly-trjg.onrender.com')) {
+      if (allowedOrigins.includes(origin) || origin?.includes('gatherly-virid.vercel.app') || origin?.includes('gatherly-trjg.onrender.com')) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
