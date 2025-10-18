@@ -48,9 +48,11 @@ const GoogleLoginPage = () => {
 
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
           Easy calls,
+          <br />
+          seamless meetings
         </h1>
         <p className="text-lg md:text-xl text-slate-600 mb-8">
-          Connect with anyone, anywhere.
+          Connect with anyone, anywhere. Start a meeting in seconds with Gatherly's simple and reliable video calling platform.
         </p>
 
         {/* Google Sign In Button */}
