@@ -22,6 +22,9 @@ const PORT = process.env.PORT;
 
 const __dirname = path.resolve();
 
+// CORS configuration
+const allowedOrigins = [process.env.CLIENT_URL, 'https://gatherly-trjg.onrender.com'];
+
 // Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
@@ -29,18 +32,7 @@ const io = new Server(httpServer, {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       
-      // List of allowed origins
-      const allowedOrigins = [
-        'http://localhost:5173',
-        'http://localhost:3000',
-        'http://localhost:5175',
-        process.env.FRONTEND_URL, // Add the FRONTEND_URL from environment variables
-        'https://gatherly-virid.vercel.app',
-        'https://gatherly-trjg.onrender.com'
-      ].filter(Boolean); // Remove any undefined values
-      
-      // Check if the origin is in our allowed list or if it's from our Vercel deployment
-      if (allowedOrigins.includes(origin) || origin?.includes('gatherly-virid.vercel.app') || origin?.includes('gatherly-trjg.onrender.com')) {
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -63,18 +55,7 @@ app.use(
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       
-      // List of allowed origins
-      const allowedOrigins = [
-        'http://localhost:5173',
-        'http://localhost:3000',
-        'http://localhost:5175',
-        process.env.FRONTEND_URL, // Add the FRONTEND_URL from environment variables
-        'https://gatherly-virid.vercel.app',
-        'https://gatherly-trjg.onrender.com'
-      ].filter(Boolean); // Remove any undefined values
-      
-      // Check if the origin is in our allowed list or if it's from our Vercel deployment
-      if (allowedOrigins.includes(origin) || origin?.includes('gatherly-virid.vercel.app') || origin?.includes('gatherly-trjg.onrender.com')) {
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
