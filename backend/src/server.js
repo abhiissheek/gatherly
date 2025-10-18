@@ -25,7 +25,24 @@ const __dirname = path.resolve();
 // Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // List of allowed origins
+      const allowedOrigins = [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://gatherly-virid.vercel.app'
+      ];
+      
+      // Check if the origin is in our allowed list or if it's from our Vercel deployment
+      if (allowedOrigins.indexOf(origin) !== -1 || origin?.includes('gatherly-virid.vercel.app')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST"],
   },
@@ -39,8 +56,25 @@ initializeMeetingScheduler();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5175",
-    credentials: true, // allow frontend to send cookies
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // List of allowed origins
+      const allowedOrigins = [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://gatherly-virid.vercel.app'
+      ];
+      
+      // Check if the origin is in our allowed list or if it's from our Vercel deployment
+      if (allowedOrigins.indexOf(origin) !== -1 || origin?.includes('gatherly-virid.vercel.app')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
   })
 );
 
