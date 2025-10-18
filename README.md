@@ -15,9 +15,8 @@ Gatherly is a real-time video calling platform that allows users to create and j
 - 📅 Meeting Scheduling with Reminder System
 
 ### UI/UX Features
-- 🎨 Modern Teal-themed UI with Tailwind CSS
+- 🎨 Modern UI with Tailwind CSS and DaisyUI Themes
 - 📱 Fully Responsive Design for Desktop and Mobile
-- 🌙 Dark/Light Theme Toggle
 - ⚡ Real-time Updates with Socket.IO
 - 🧠 Global State Management with Zustand
 
@@ -51,7 +50,7 @@ Gatherly is a real-time video calling platform that allows users to create and j
 
 4. **User Interface**
    - Modern, responsive design with Tailwind CSS
-   - Dark/light theme support
+   - Themed UI with DaisyUI (multiple color schemes)
    - Intuitive controls for all features
    - Participant grid layout with dynamic sizing
 
