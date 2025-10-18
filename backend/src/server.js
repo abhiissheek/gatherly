@@ -85,6 +85,40 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Redirect for backward compatibility with frontend requests to /auth/me
+app.get("/auth/me", (req, res) => {
+  // Check if user is authenticated
+  if (req.user) {
+    res.status(200).json({ success: true, user: req.user });
+  } else {
+    // Check for JWT token in cookies
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    
+    // Verify token and get user
+    import("jsonwebtoken").then((jwt) => {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        import("./models/User.js").then((UserModule) => {
+          const User = UserModule.default;
+          User.findById(decoded.userId).then((user) => {
+            if (!user) {
+              return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            res.status(200).json({ success: true, user });
+          }).catch((err) => {
+            res.status(401).json({ success: false, message: "Unauthorized" });
+          });
+        });
+      } catch (error) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+      }
+    });
+  }
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/meetings", meetingRoutes);
 
