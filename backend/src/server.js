@@ -23,7 +23,13 @@ const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
 // CORS configuration
-const allowedOrigins = [process.env.CLIENT_URL, 'https://gatherly-trjg.onrender.com'];
+const allowedOrigins = [
+  process.env.CLIENT_URL, 
+  'https://gatherly-trjg.onrender.com',
+  'http://localhost:3000',  // Add localhost:3000 for local development
+  'http://localhost:5173',  // Add localhost:5173 for Vite default
+  'http://localhost:5175'   // Add localhost:5175 as fallback
+];
 
 // Initialize Socket.IO
 const io = new Server(httpServer, {
@@ -64,26 +70,6 @@ app.use(
     credentials: true,
   })
 );
-
-app.use(express.json());
-app.use(cookieParser());
-
-// Session configuration
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "your-secret-key",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    },
-  })
-);
-
-// Passport initialization
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Redirect for backward compatibility with frontend requests to /auth/me
 app.get("/auth/me", (req, res) => {
