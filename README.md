@@ -55,11 +55,6 @@ Gatherly is a real-time video calling platform that allows users to create and j
    - Intuitive controls for all features
    - Participant grid layout with dynamic sizing
 
-### 🚫 Removed Features (As Per Requirements)
-1. **Admin Controls** - Removed per user request
-2. **Recording Feature** - Removed per user request
-3. **Password Protection** - Removed per user request
-
 ## 🧪 Environment Setup
 
 ### Backend Configuration (`.env` file in `/backend` directory)
