@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 
 const SOCKET_URL = import.meta.env.MODE === "development" 
   ? "http://localhost:5001" 
-  : window.location.origin;
+  : import.meta.env.VITE_API_URL || window.location.origin;
 
 let socket = null;
 
