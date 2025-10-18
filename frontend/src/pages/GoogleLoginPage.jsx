@@ -13,19 +13,9 @@ const GoogleLoginPage = () => {
   }, [authUser, isLoading, navigate]);
 
   const handleGoogleLogin = () => {
-    let baseUrl;
-    if (import.meta.env.MODE === "development") {
-      baseUrl = "http://localhost:5001";
-    } else {
-      const apiUrl = import.meta.env.VITE_API_URL;
-      if (apiUrl && apiUrl.endsWith('/api')) {
-        baseUrl = apiUrl.slice(0, -4); // Remove '/api' from the end
-      } else if (apiUrl) {
-        baseUrl = apiUrl;
-      } else {
-        baseUrl = window.location.origin;
-      }
-    }
+    const baseUrl = import.meta.env.MODE === "development" 
+      ? "http://localhost:5001"
+      : import.meta.env.VITE_API_URL || window.location.origin;
     window.location.href = `${baseUrl}/api/auth/google`;
   };
 

@@ -1,18 +1,8 @@
 import { io } from "socket.io-client";
 
-const getSocketUrl = () => {
-  if (import.meta.env.MODE === "development") {
-    return "http://localhost:5001";
-  }
-  
-  const apiUrl = import.meta.env.VITE_API_URL;
-  if (apiUrl && apiUrl.endsWith('/api')) {
-    return apiUrl.slice(0, -4); // Remove '/api' from the end
-  }
-  return apiUrl || window.location.origin;
-};
-
-const SOCKET_URL = getSocketUrl();
+const SOCKET_URL = import.meta.env.MODE === "development" 
+  ? "http://localhost:5001" 
+  : import.meta.env.VITE_API_URL || window.location.origin;
 
 let socket = null;
 
