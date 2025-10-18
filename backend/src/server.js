@@ -104,11 +104,12 @@ app.use("/api/meetings", meetingRoutes);
 // WebRTC ICE servers endpoint
 app.get("/api/webrtc/ice-servers", getIceServersController);
 
+// In production with separate frontend deployment, we don't need to serve frontend files
+// Frontend is served by Vercel, backend by Render
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  // Health check endpoint
+  app.get("/", (req, res) => {
+    res.json({ message: "Gatherly Backend is running", status: "ok" });
   });
 }
 
