@@ -18,16 +18,16 @@ Gatherly is a real-time video calling platform that allows users to create and j
 - 🎨 Modern UI with Tailwind CSS and DaisyUI Themes
 - 📱 Fully Responsive Design for Desktop and Mobile
 - ⚡ Real-time Updates with Socket.IO
-- 🧠 Global State Management with Zustand
+
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: React + Vite + Tailwind CSS + Zustand
+- **Frontend**: React + Vite + Tailwind CSS 
 - **Backend**: Express.js + Socket.io + WebRTC
 - **Database**: MongoDB
 - **Authentication**: Google OAuth
 - **Real-time Communication**: Socket.io and WebRTC
-- **State Management**: Zustand (global state)
+
 
 ## 📋 Current Implementation Status
 
@@ -53,11 +53,6 @@ Gatherly is a real-time video calling platform that allows users to create and j
    - Themed UI with DaisyUI (multiple color schemes)
    - Intuitive controls for all features
    - Participant grid layout with dynamic sizing
-
-### 🚫 Removed Features (As Per Requirements)
-1. **Admin Controls** - Removed per user request
-2. **Recording Feature** - Removed per user request
-3. **Password Protection** - Removed per user request
 
 ## 🧪 Environment Setup
 
@@ -163,7 +158,7 @@ The reminder system automatically sends email notifications 15 minutes before sc
 - MongoDB for persistent data storage
 - Mongoose ODM for data modeling
 - RESTful API for meeting operations
-- Real-time state management with Zustand
+
 
 ## 🚀 Deployment
 
@@ -172,13 +167,6 @@ The application can be deployed to any cloud platform that supports Node.js appl
 - Backend: Render, Heroku, or similar Node.js hosting
 - Database: MongoDB Atlas for database hosting
 
-## 📸 Screenshots
-
-### Home Page
-![Home Page](frontend/public/screenshot-for-readme.png)
-
-### Meeting Interface
-![Meeting Interface](frontend/public/screenshot-for-readme.png)
 
 ## 🛡️ Security Features
 
@@ -186,14 +174,6 @@ The application can be deployed to any cloud platform that supports Node.js appl
 - Encrypted communication with HTTPS
 - Secure session management with JWT
 - Input validation and sanitization
-
-## 📈 Performance Considerations
-
-- Optimized WebRTC mesh network for small groups (2-6 participants)
-- Efficient state management with Zustand
-- Lazy loading of components
-- Responsive design for all device sizes
-- Minimal bundle size with Vite build optimization
 
 ## 🆘 Troubleshooting
 
