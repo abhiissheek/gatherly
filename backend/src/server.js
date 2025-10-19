@@ -117,31 +117,34 @@ app.use(
 // Redirect for backward compatibility with frontend requests to /auth/me
 app.get("/auth/me", async (req, res) => {
   try {
-    // Check if user is authenticated
-    if (req.user) {
-      res.status(200).json({ success: true, user: req.user });
-      return;
-    }
+    console.log("Auth check - cookies:", req.cookies);
+    console.log("Auth check - req.user:", req.user);
     
-    // Check for JWT token in cookies
+    // Check for JWT token in cookies first (Google OAuth sets this)
     const token = req.cookies.jwt;
-    if (!token) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+    if (token) {
+      console.log("JWT token found, verifying...");
+      const jwt = await import("jsonwebtoken");
+      const UserModule = await import("./models/User.js");
+      const User = UserModule.default;
+      
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = await User.findById(decoded.userId);
+      
+      if (user) {
+        console.log("JWT auth successful for user:", user.email);
+        return res.status(200).json({ success: true, user });
+      }
     }
     
-    // Verify token and get user
-    const jwt = await import("jsonwebtoken");
-    const UserModule = await import("./models/User.js");
-    const User = UserModule.default;
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const user = await User.findById(decoded.userId);
-    
-    if (!user) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+    // Fallback to session-based auth
+    if (req.user) {
+      console.log("Session auth successful for user:", req.user.email);
+      return res.status(200).json({ success: true, user: req.user });
     }
     
-    res.status(200).json({ success: true, user });
+    console.log("No authentication found");
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   } catch (error) {
     console.error("Error in /auth/me:", error);
     res.status(401).json({ success: false, message: "Unauthorized" });
