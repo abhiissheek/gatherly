@@ -357,5 +357,5 @@ export const kickParticipant = async (meetingId, userId, adminId) => {
   }
 };
 
-// Export active users and meetings for access in controllers
-export { activeUsers, activeMeetings };
+// Export io instance for use in other modules
+export { ioInstance as io, activeUsers, activeMeetings };

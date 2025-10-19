@@ -21,10 +21,10 @@ export async function googleCallback(req, res) {
     });
 
     // Redirect to frontend
-    res.redirect(process.env.CLIENT_URL || "http://localhost:5175");
+    res.redirect(process.env.FRONTEND_URL || process.env.CLIENT_URL || "http://localhost:5175");
   } catch (error) {
     console.log("Error in googleCallback controller", error);
-    res.redirect(`${process.env.CLIENT_URL}/login?error=auth_failed`);
+    res.redirect(`${process.env.FRONTEND_URL || process.env.CLIENT_URL}/login?error=auth_failed`);
   }
 }
 

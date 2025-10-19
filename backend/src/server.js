@@ -25,6 +25,7 @@ const __dirname = path.resolve();
 // CORS configuration
 const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:3000', 
+  process.env.FRONTEND_URL || 'https://gatherly-virid.vercel.app',
   'https://gatherly-trjg.onrender.com',
   'https://gatherly-virid.vercel.app',
   'http://localhost:3000',  // Add localhost:3000 for local development
@@ -75,11 +76,14 @@ app.use(
 );
 
 // Redirect for backward compatibility with frontend requests to /auth/me
-app.get("/auth/me", (req, res) => {
-  // Check if user is authenticated
-  if (req.user) {
-    res.status(200).json({ success: true, user: req.user });
-  } else {
+app.get("/auth/me", async (req, res) => {
+  try {
+    // Check if user is authenticated
+    if (req.user) {
+      res.status(200).json({ success: true, user: req.user });
+      return;
+    }
+    
     // Check for JWT token in cookies
     const token = req.cookies.jwt;
     if (!token) {
@@ -87,24 +91,21 @@ app.get("/auth/me", (req, res) => {
     }
     
     // Verify token and get user
-    import("jsonwebtoken").then((jwt) => {
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        import("./models/User.js").then((UserModule) => {
-          const User = UserModule.default;
-          User.findById(decoded.userId).then((user) => {
-            if (!user) {
-              return res.status(401).json({ success: false, message: "Unauthorized" });
-            }
-            res.status(200).json({ success: true, user });
-          }).catch((err) => {
-            res.status(401).json({ success: false, message: "Unauthorized" });
-          });
-        });
-      } catch (error) {
-        res.status(401).json({ success: false, message: "Unauthorized" });
-      }
-    });
+    const jwt = await import("jsonwebtoken");
+    const UserModule = await import("./models/User.js");
+    const User = UserModule.default;
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await User.findById(decoded.userId);
+    
+    if (!user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error("Error in /auth/me:", error);
+    res.status(401).json({ success: false, message: "Unauthorized" });
   }
 });
 
