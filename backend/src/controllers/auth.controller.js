@@ -24,20 +24,23 @@ export async function googleCallback(req, res) {
 
     console.log("JWT token generated, setting cookie...");
 
-    // Set cookie
+    // Set cookie with proper cross-origin settings
     res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       httpOnly: true,
-      sameSite: "none",
-      secure: true,
+      sameSite: "none", // Required for cross-origin
+      secure: true, // Required for HTTPS
+      domain: undefined, // Don't set domain for cross-origin
+      path: "/", // Available on all paths
     });
 
-    console.log("Cookie set, redirecting to frontend...");
+    console.log("Redirecting to frontend with token...");
 
-    // Redirect to frontend
+    // Redirect to frontend with token in URL (for localStorage)
     const redirectUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL || "http://localhost:5175";
-    console.log("Redirecting to:", redirectUrl);
-    res.redirect(redirectUrl);
+    const finalUrl = `${redirectUrl}?token=${token}`;
+    console.log("Redirecting to:", finalUrl);
+    res.redirect(finalUrl);
   } catch (error) {
     console.log("Error in googleCallback controller", error);
     res.redirect(`${process.env.FRONTEND_URL || process.env.CLIENT_URL}/login?error=auth_failed`);

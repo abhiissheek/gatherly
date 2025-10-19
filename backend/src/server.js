@@ -118,10 +118,26 @@ app.use(
 app.get("/auth/me", async (req, res) => {
   try {
     console.log("Auth check - cookies:", req.cookies);
+    console.log("Auth check - headers:", req.headers.authorization);
     console.log("Auth check - req.user:", req.user);
     
-    // Check for JWT token in cookies first (Google OAuth sets this)
-    const token = req.cookies.jwt;
+    // Check for JWT token in Authorization header first (localStorage method)
+    const authHeader = req.headers.authorization;
+    let token = null;
+    
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7);
+      console.log("JWT token found in Authorization header");
+    }
+    
+    // Fallback to cookies
+    if (!token) {
+      token = req.cookies.jwt;
+      if (token) {
+        console.log("JWT token found in cookies");
+      }
+    }
+    
     if (token) {
       console.log("JWT token found, verifying...");
       const jwt = await import("jsonwebtoken");
@@ -144,11 +160,23 @@ app.get("/auth/me", async (req, res) => {
     }
     
     console.log("No authentication found");
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+    return res.status(401).json({ success: false, message: "Unauthorized - No token provided" });
   } catch (error) {
     console.error("Error in /auth/me:", error);
     res.status(401).json({ success: false, message: "Unauthorized" });
   }
+});
+
+// Debug endpoint to test cookies
+app.get("/api/debug/cookies", (req, res) => {
+  console.log("Debug cookies endpoint hit");
+  console.log("Request cookies:", req.cookies);
+  console.log("Request headers:", req.headers);
+  res.json({
+    cookies: req.cookies,
+    headers: req.headers,
+    message: "Cookie debug info"
+  });
 });
 
 app.use("/api/auth", authRoutes);

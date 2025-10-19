@@ -1,10 +1,22 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
 
 const GoogleLoginPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { authUser, isLoading } = useAuthUser();
+
+  useEffect(() => {
+    // Check if we have a token from Google OAuth redirect
+    const token = searchParams.get('token');
+    if (token) {
+      console.log("Token received from Google OAuth:", token);
+      localStorage.setItem('authToken', token);
+      // Remove token from URL
+      navigate('/', { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   useEffect(() => {
     if (authUser && !isLoading) {

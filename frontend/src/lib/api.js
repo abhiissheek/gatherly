@@ -10,16 +10,29 @@ export const login = async (loginData) => {
   return response.data;
 };
 export const logout = async () => {
-  const response = await axiosInstance.post("/auth/logout");
-  return response.data;
+  try {
+    // Clear localStorage token
+    localStorage.removeItem('authToken');
+    const response = await axiosInstance.post("/auth/logout");
+    return response.data;
+  } catch (error) {
+    // Even if backend logout fails, clear local token
+    localStorage.removeItem('authToken');
+    console.log("Logout error:", error);
+    return { success: true, message: "Logged out locally" };
+  }
 };
 
 export const getAuthUser = async () => {
   try {
+    console.log("Making auth request to:", axiosInstance.defaults.baseURL + "/auth/me");
+    console.log("Axios config:", axiosInstance.defaults);
     const res = await axiosInstance.get("/auth/me");
+    console.log("Auth response:", res.data);
     return res.data;
   } catch (error) {
     console.log("Error in getAuthUser:", error);
+    console.log("Error response:", error.response?.data);
     return null;
   }
 };
