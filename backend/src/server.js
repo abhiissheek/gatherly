@@ -33,17 +33,31 @@ const allowedOrigins = [
   'http://localhost:5175'   // Add localhost:5175 as fallback
 ];
 
+console.log('Allowed CORS origins:', allowedOrigins);
+console.log('Environment variables:');
+console.log('CLIENT_URL:', process.env.CLIENT_URL);
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+
 // Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
     origin: function (origin, callback) {
+      console.log('Socket.IO CORS request from origin:', origin);
       // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        console.log('No origin provided for Socket.IO, allowing request');
+        return callback(null, true);
+      }
       
       if (allowedOrigins.includes(origin)) {
+        console.log('Socket.IO origin allowed:', origin);
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        console.log('Socket.IO origin not allowed:', origin);
+        console.log('Allowed origins:', allowedOrigins);
+        // Temporarily allow all origins for debugging
+        console.log('Temporarily allowing Socket.IO origin for debugging:', origin);
+        callback(null, true);
       }
     },
     credentials: true,
@@ -62,13 +76,22 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: function (origin, callback) {
+      console.log('Express CORS request from origin:', origin);
       // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        console.log('No origin provided for Express, allowing request');
+        return callback(null, true);
+      }
       
       if (allowedOrigins.includes(origin)) {
+        console.log('Express origin allowed:', origin);
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        console.log('Express origin not allowed:', origin);
+        console.log('Allowed origins:', allowedOrigins);
+        // Temporarily allow all origins for debugging
+        console.log('Temporarily allowing origin for debugging:', origin);
+        callback(null, true);
       }
     },
     credentials: true,
