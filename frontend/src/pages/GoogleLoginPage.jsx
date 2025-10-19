@@ -13,10 +13,11 @@ const GoogleLoginPage = () => {
     if (token) {
       console.log("Token received from Google OAuth:", token);
       localStorage.setItem('authToken', token);
-      // Remove token from URL
-      navigate('/', { replace: true });
+      console.log("Token stored in localStorage:", localStorage.getItem('authToken'));
+      // Remove token from URL and reload to trigger auth check
+      window.location.href = '/';
     }
-  }, [searchParams, navigate]);
+  }, [searchParams]);
 
   useEffect(() => {
     if (authUser && !isLoading) {

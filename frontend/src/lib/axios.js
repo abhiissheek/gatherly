@@ -13,8 +13,10 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
+    console.log("Axios interceptor - token from localStorage:", token ? "Found" : "Not found");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log("Authorization header set:", config.headers.Authorization);
     }
     return config;
   },
