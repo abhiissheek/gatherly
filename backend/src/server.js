@@ -28,6 +28,7 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || 'https://gatherly-virid.vercel.app',
   'https://gatherly-trjg.onrender.com',
   'https://gatherly-virid.vercel.app',
+  'https://gatherly-m902prz19-abhis-projects-059091ef.vercel.app', // New Vercel URL
   'http://localhost:3000',  // Add localhost:3000 for local development
   'http://localhost:5173',  // Add localhost:5173 for Vite default
   'http://localhost:5175'   // Add localhost:5175 as fallback
@@ -70,6 +71,25 @@ initializeSocket(io);
 initializeMeetingScheduler();
 
 app.use(cookieParser());
+
+// Express session middleware (required for Google OAuth)
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "fallback-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
+  })
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(
   cors({
