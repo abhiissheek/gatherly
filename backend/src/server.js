@@ -55,9 +55,7 @@ const io = new Server(httpServer, {
       } else {
         console.log('Socket.IO origin not allowed:', origin);
         console.log('Allowed origins:', allowedOrigins);
-        // Temporarily allow all origins for debugging
-        console.log('Temporarily allowing Socket.IO origin for debugging:', origin);
-        callback(null, true);
+        callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
@@ -89,9 +87,7 @@ app.use(
       } else {
         console.log('Express origin not allowed:', origin);
         console.log('Allowed origins:', allowedOrigins);
-        // Temporarily allow all origins for debugging
-        console.log('Temporarily allowing origin for debugging:', origin);
-        callback(null, true);
+        callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,

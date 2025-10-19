@@ -15,7 +15,7 @@ const GoogleLoginPage = () => {
   const handleGoogleLogin = () => {
     const baseUrl = import.meta.env.MODE === "development" 
       ? "http://localhost:5001"
-      : import.meta.env.VITE_API_URL || window.location.origin;
+      : import.meta.env.VITE_API_URL?.replace('/api', '') || "https://gatherly-trjg.onrender.com";
     window.location.href = `${baseUrl}/api/auth/google`;
   };
 
