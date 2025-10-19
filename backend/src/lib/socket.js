@@ -6,7 +6,11 @@ import Meeting from "../models/Meeting.js";
 const activeUsers = new Map(); // userId -> socketId
 const activeMeetings = new Map(); // meetingId -> Set of socketIds
 
+let ioInstance = null;
+
 export const initializeSocket = (io) => {
+  ioInstance = io;
+  
   io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
 
@@ -320,24 +324,21 @@ export const kickParticipant = async (meetingId, userId, adminId) => {
     );
 
     // Notify the participant they've been kicked
-    const io = require("../server.js").getIO();
-    io.to(participantSocketId).emit("kicked-from-meeting", {
-      message: "You have been removed from the meeting by the host"
-    });
+    if (ioInstance) {
+      ioInstance.to(participantSocketId).emit("kicked-from-meeting", {
+        message: "You have been removed from the meeting by the host"
+      });
+    }
 
     // Notify others in the meeting
     const participantDetails = await MeetingParticipant.findOne({ meetingId, userId })
       .populate('userId', 'fullName');
     
-    io.to(meetingId).emit("user-left", { 
-      userId, 
-      userName: participantDetails?.userId?.fullName || null 
-    });
-
-    // Make the participant leave the room
-    const socket = require("../server.js").getSocket(participantSocketId);
-    if (socket) {
-      socket.leave(meetingId);
+    if (ioInstance) {
+      ioInstance.to(meetingId).emit("user-left", { 
+        userId, 
+        userName: participantDetails?.userId?.fullName || null 
+      });
     }
 
     // Remove from active users map
@@ -355,3 +356,6 @@ export const kickParticipant = async (meetingId, userId, adminId) => {
     throw error;
   }
 };
+
+// Export active users and meetings for access in controllers
+export { activeUsers, activeMeetings };

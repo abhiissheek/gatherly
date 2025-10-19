@@ -18,14 +18,15 @@ import { getIceServersController } from "./lib/webrtc.js";
 
 const app = express();
 const httpServer = createServer(app);
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5001;
 
 const __dirname = path.resolve();
 
 // CORS configuration
 const allowedOrigins = [
-  process.env.CLIENT_URL, 
+  process.env.CLIENT_URL || 'http://localhost:3000', 
   'https://gatherly-trjg.onrender.com',
+  'https://gatherly-virid.vercel.app',
   'http://localhost:3000',  // Add localhost:3000 for local development
   'http://localhost:5173',  // Add localhost:5173 for Vite default
   'http://localhost:5175'   // Add localhost:5175 as fallback
@@ -54,6 +55,8 @@ initializeSocket(io);
 
 // Initialize meeting scheduler
 initializeMeetingScheduler();
+
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -119,6 +122,9 @@ if (process.env.NODE_ENV === "production") {
     res.json({ message: "Gatherly Backend is running", status: "ok" });
   });
 }
+
+// Export io instance for use in other modules
+export { io };
 
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

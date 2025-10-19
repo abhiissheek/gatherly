@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import Meeting from "../models/Meeting.js";
 import MeetingParticipant from "../models/MeetingParticipant.js";
 import Message from "../models/Message.js";
-import { kickParticipant as socketKickParticipant } from "../lib/socket.js";
+import { io, activeUsers, activeMeetings } from "../lib/socket.js";
 
 // Create instant meeting
 export const createMeeting = async (req, res) => {
