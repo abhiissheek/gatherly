@@ -1,6 +1,6 @@
 # Gatherly - Video Calling Platform
 
-![Gatherly Demo](frontend/public/screenshot-for-readme.png)
+
 
 Gatherly is a real-time video calling platform that allows users to create and join video calls, chat, and manage audio/video settings. The application uses WebRTC for real-time communication and provides a responsive, user-friendly interface.
 
